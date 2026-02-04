@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VFX Support Contact Form</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #1a1a1a;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    /* 3D Card Style */
+    .contact-card {
+      background: #0a0a0a;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+      transform-style: preserve-3d;
+      transition: transform 0.2s ease;
+    }
+
+    .contact-card:hover {
+      transform: rotateY(10deg);
+    }
+
+    /* Card Header */
+    .contact-card h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    /* Form Styles */
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input,
+    textarea {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 12px;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #00bcd4;
+    }
+
+    /* Submit Button */
+    button {
+      background-color: #545454;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #555555;
+    }
+
+    /* Background Animation */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, #0a0a0a 0%, #141414 60%, #1a1a1a 100%);
+      background-size: 18px 18px, auto;
+      z-index: -1;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="contact-card">
+    <h2>Contact Us</h2>
+    <form id="contactForm" action="https://formspree.io/f/xvzqeydj" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <script>
+    // Optional: You can add some simple animation to the 3D card on hover
+    document.querySelector('.contact-card').addEventListener('mousemove', (e) => {
+      const card = e.currentTarget;
+      const { width, height, left, top } = card.getBoundingClientRect();
+      const mouseX = e.clientX - left;
+      const mouseY = e.clientY - top;
+
+      const rotateX = ((mouseY / height) - 0.5) * 20;
+      const rotateY = ((mouseX / width) - 0.5) * -20;
+
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    document.querySelector('.contact-card').addEventListener('mouseleave', () => {
+      document.querySelector('.contact-card').style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+  </script>
+</body>
+</html>
