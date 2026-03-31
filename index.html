@@ -1,132 +1,380 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VFX Support Contact Form</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Support — Vision For Xperiences</title>
+  <meta name="description" content="Need support with your project? Vision For Xperiences is here to help. Leave your contact info and we'll get back to you within 48 hours." />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="https://vfx.productions/assets/logo.png" />
   <style>
-    /* General Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root{
+      --bg:#000;
+      --fg:rgba(240,240,250,1);
+      --fg90:rgba(240,240,250,.9);
+      --fg80:rgba(240,240,250,.8);
+      --fg60:rgba(240,240,250,.6);
+      --fg35:rgba(240,240,250,.35);
+      --fg25:rgba(255,255,255,.25);
+      --fg15:rgba(240,240,250,.15);
+      --fg10:rgba(240,240,250,.10);
+      --maxw:1700px;
+      --headerH:74px;
+      --radius:10px;
+      --ease:cubic-bezier(.19,1,.22,1);
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth; }
+    html,body{ height:100%; background:var(--bg); color:var(--fg); }
+    body{
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans","Liberation Sans",sans-serif;
+      letter-spacing:.02em; overflow-x:hidden; -webkit-font-smoothing:antialiased;
     }
 
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #1a1a1a;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 20px;
+    /* ====== HEADER ====== */
+    header{
+      position:fixed; top:0; left:0; right:0; z-index:1000;
+      background:linear-gradient(180deg,rgba(0,0,0,.70) 0%,rgba(0,0,0,0) 95%);
+      padding-top:env(safe-area-inset-top);
+    }
+    .nav{
+      height:var(--headerH); display:flex; align-items:center; gap:18px;
+      padding:0 22px; max-width:var(--maxw); margin:0 auto;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--fg);
+      font-weight:800; letter-spacing:.10em; text-transform:uppercase; white-space:nowrap; user-select:none;
+    }
+    .links{ display:flex; align-items:center; gap:18px; flex:1; min-width:0; }
+    .links a{
+      color:var(--fg90); text-decoration:none; font-weight:800; font-size:.80rem;
+      letter-spacing:.10em; text-transform:uppercase; white-space:nowrap; opacity:.92;
+      transition:opacity .2s var(--ease);
+    }
+    .links a:hover{ opacity:1; }
+    .right{ display:flex; align-items:center; gap:12px; }
+    .hamburger{
+      display:none; width:44px; height:44px; border:1px solid var(--fg25); border-radius:10px;
+      background:rgba(0,0,0,.20); align-items:center; justify-content:center; cursor:pointer;
+    }
+    .hamburger span{ display:block; width:18px; height:2px; background:var(--fg80); position:relative; }
+    .hamburger span::before,.hamburger span::after{
+      content:""; position:absolute; left:0; width:18px; height:2px; background:var(--fg80);
+    }
+    .hamburger span::before{ top:-6px; }
+    .hamburger span::after{ top:6px; }
+
+    /* ====== MOBILE DRAWER ====== */
+    .drawer-backdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,.75); backdrop-filter:blur(6px);
+      z-index:1200; opacity:0; pointer-events:none; transition:opacity .25s var(--ease);
+    }
+    .drawer{
+      position:fixed; top:env(safe-area-inset-top); right:0;
+      height:calc(100vh - env(safe-area-inset-top)); width:min(360px,92vw);
+      background:rgba(0,0,0,.92); border-left:1px solid var(--fg15); z-index:1300;
+      transform:translateX(105%); transition:transform .28s var(--ease);
+      padding:18px 16px 16px; display:flex; flex-direction:column; gap:12px;
+    }
+    .drawer.open{ transform:translateX(0); }
+    .drawer-backdrop.open{ opacity:1; pointer-events:auto; }
+    .drawer-top{
+      display:flex; align-items:center; justify-content:space-between;
+      padding-bottom:10px; border-bottom:1px solid var(--fg10);
+    }
+    .drawer-title{ font-weight:900; letter-spacing:.12em; text-transform:uppercase; font-size:.85rem; color:var(--fg90); }
+    .drawer-close{
+      width:40px; height:40px; border:1px solid var(--fg25); border-radius:12px;
+      background:rgba(255,255,255,.02); cursor:pointer; color:var(--fg80);
+      font-size:18px; line-height:40px; text-align:center;
+    }
+    .drawer a{
+      color:var(--fg90); text-decoration:none; font-weight:900; letter-spacing:.12em;
+      text-transform:uppercase; padding:15px 14px; min-height:44px; display:flex; align-items:center;
+      border:1px solid transparent; border-radius:12px; background:rgba(255,255,255,.02);
+    }
+    .drawer a:hover{ border-color:var(--fg25); background:rgba(255,255,255,.04); }
+
+    /* ====== HERO SECTION ====== */
+    main{ padding-top:calc(var(--headerH) + env(safe-area-inset-top)); }
+    .section{
+      position:relative; min-height:calc(100svh - var(--headerH));
+      display:flex; align-items:stretch; justify-content:center;
+      overflow:hidden; border-top:1px solid rgba(255,255,255,.05);
+    }
+    .media{ position:absolute; inset:0; z-index:1; overflow:hidden; }
+    .media video{
+      position:absolute; width:100%; height:100%; object-fit:cover;
+      top:0; left:0; transform:scale(1.02); filter:contrast(1.02) brightness(.92);
+    }
+    .fade{
+      position:absolute; inset:0; z-index:2; pointer-events:none;
+      background:
+        radial-gradient(circle at 70% 40%,rgba(255,255,255,0) 40%,rgba(0,0,0,.30) 100%),
+        linear-gradient(90deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,.12) 55%,rgba(0,0,0,.35) 100%),
+        linear-gradient(180deg,rgba(0,0,0,.10) 0%,rgba(0,0,0,.35) 100%);
+    }
+    .content{
+      position:relative; z-index:3; width:100%; max-width:var(--maxw); margin:0 auto;
+      padding:clamp(28px,4vw,70px) 22px; display:flex; align-items:flex-end;
+    }
+    .copy{ max-width:680px; }
+    .kicker{ font-size:.85rem; letter-spacing:.14em; text-transform:uppercase; color:var(--fg80); margin-bottom:12px; }
+    h1{ font-size:clamp(2.2rem,4.6vw,4.1rem); line-height:.98; letter-spacing:.02em; text-transform:uppercase; font-weight:950; }
+    .sub{ margin-top:14px; max-width:56ch; font-size:1.05rem; line-height:1.6; color:var(--fg80); }
+    .down{
+      position:absolute; left:50%; bottom:24px; transform:translateX(-50%); z-index:4;
+      display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none;
+      color:var(--fg80); text-transform:uppercase; font-weight:900; letter-spacing:.12em; font-size:.70rem; opacity:.92;
+    }
+    .chev{
+      width:18px; height:18px; border-right:2px solid var(--fg80); border-bottom:2px solid var(--fg80);
+      transform:rotate(45deg); animation:bob 1.4s infinite var(--ease);
+    }
+    @keyframes bob{
+      0%,100%{ transform:rotate(45deg) translate(0,0); opacity:.85; }
+      50%{ transform:rotate(45deg) translate(3px,3px); opacity:1; }
     }
 
-    /* 3D Card Style */
-    .contact-card {
-      background: #0a0a0a;
-      border-radius: 12px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-      transform-style: preserve-3d;
-      transition: transform 0.2s ease;
+    /* ====== FORM SECTION ====== */
+    .form-section{ max-width:var(--maxw); margin:0 auto; padding:80px 22px 100px; }
+    .form-intro{ margin-bottom:40px; }
+    .form-intro h2{
+      font-size:clamp(1.4rem,2.5vw,2rem); font-weight:950;
+      letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px;
+    }
+    .form-intro p{ font-size:.95rem; color:var(--fg60); line-height:1.6; max-width:52ch; }
+    .inquiry-form{ max-width:780px; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .inquiry-form .field-full{ grid-column:1 / -1; }
+    .inquiry-form label{
+      display:block; font-size:.72rem; letter-spacing:.14em;
+      text-transform:uppercase; color:var(--fg60); margin-bottom:8px;
+    }
+    .inquiry-form input,
+    .inquiry-form select,
+    .inquiry-form textarea{
+      width:100%; background:rgba(255,255,255,.04); border:1px solid var(--fg15);
+      border-radius:var(--radius); padding:14px 16px; color:var(--fg); font-size:.95rem;
+      font-family:inherit; outline:none; -webkit-appearance:none; appearance:none;
+      transition:border-color .2s var(--ease);
+    }
+    .inquiry-form input:focus,
+    .inquiry-form select:focus,
+    .inquiry-form textarea:focus{ border-color:var(--fg35); }
+    .inquiry-form select{
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(240,240,250,.45)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 16px center; padding-right:44px;
+    }
+    .inquiry-form select option{ background:#111; color:var(--fg); }
+    .inquiry-form textarea{ min-height:160px; resize:vertical; line-height:1.6; }
+    .inquiry-form .form-submit{ grid-column:1 / -1; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .btn-submit{
+      display:inline-flex; align-items:center; justify-content:center;
+      height:52px; min-width:200px; padding:0 24px; border-radius:8px;
+      border:1px solid var(--fg35); color:var(--fg); background:rgba(0,0,0,.30);
+      text-transform:uppercase; letter-spacing:.12em; font-weight:900; font-size:.80rem;
+      font-family:inherit; cursor:pointer; transition:background .25s var(--ease), color .25s var(--ease);
+    }
+    .btn-submit:hover{ background:rgba(255,255,255,.92); color:#000; }
+    .form-note{ font-size:.80rem; color:var(--fg35); line-height:1.5; }
+    .form-success{
+      display:none; grid-column:1 / -1; padding:20px; border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.04);
+      font-size:.92rem; color:var(--fg80); line-height:1.6;
     }
 
-    .contact-card:hover {
-      transform: rotateY(10deg);
-    }
+    /* ====== FOOTER ====== */
+    .site-footer{ background:#000; border-top:1px solid var(--fg10); padding:48px 22px 32px; }
+    .footer-inner{ max-width:var(--maxw); margin:0 auto; display:flex; flex-direction:column; gap:28px; }
+    .footer-copy{ font-size:.72rem; letter-spacing:.08em; color:var(--fg35); }
 
-    /* Card Header */
-    .contact-card h2 {
-      text-align: center;
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      color: #ffffff;
+    /* ====== RESPONSIVE ====== */
+    @media (max-width:980px){
+      .links,.right{ display:none; }
+      .hamburger{ display:flex; }
     }
-
-    /* Form Styles */
-    form {
-      display: flex;
-      flex-direction: column;
+    @media (max-width:560px){
+      .inquiry-form{ grid-template-columns:1fr; }
+      .inquiry-form .field-full,.inquiry-form .form-submit{ grid-column:1; }
+      .form-section{ padding:52px 18px 72px; }
+      .site-footer{ padding:40px 18px 32px; }
     }
-
-    input,
-    textarea {
-      background-color: #333;
-      color: #fff;
-      border: 1px solid #444;
-      padding: 12px;
-      margin-bottom: 1rem;
-      border-radius: 6px;
-      font-size: 1rem;
+    @supports (padding-bottom:env(safe-area-inset-bottom)){
+      .site-footer{ padding-bottom:calc(32px + env(safe-area-inset-bottom)); }
     }
-
-    input:focus,
-    textarea:focus {
-      outline: none;
-      border-color: #00bcd4;
-    }
-
-    /* Submit Button */
-    button {
-      background-color: #545454;
-      color: #fff;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    button:hover {
-      background-color: #555555;
-    }
-
-    /* Background Animation */
-    .bg {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(to bottom, #0a0a0a 0%, #141414 60%, #1a1a1a 100%);
-      background-size: 18px 18px, auto;
-      z-index: -1;
-    }
-
   </style>
 </head>
 <body>
-  <div class="bg"></div>
-  <div class="contact-card">
-    <h2>Contact Us</h2>
-    <form id="contactForm" action="https://formspree.io/f/xvzqeydj" method="POST">
-      <input type="text" name="name" placeholder="Your Name" required>
-      <input type="email" name="email" placeholder="Your Email" required>
-      <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
-  </div>
+  <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-top">
+      <div class="drawer-title">Navigation</div>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
+    </div>
+    <a href="https://vfx.productions" data-nav>Main Site</a>
+    <a href="https://vfx.productions/contact" data-nav>Get a Quote</a>
+  </aside>
+
+  <header>
+    <nav class="nav" aria-label="Primary">
+      <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span></button>
+      <a class="brand" href="/">
+        <img src="https://vfx.productions/assets/logo.png" alt="Vision For Xperiences logo" style="height:28px;object-fit:contain;" />
+      </a>
+      <div class="links" aria-label="Site links">
+        <a href="https://vfx.productions">Main Site</a>
+        <a href="https://vfx.productions/contact">Get a Quote</a>
+      </div>
+      <div class="right"></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section" style="min-height:100svh;">
+      <div class="media">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="https://vfx.productions/assets/hero.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="fade"></div>
+      <div class="content">
+        <div class="copy">
+          <div class="kicker">Support</div>
+          <h1>WE'VE<br>GOT YOU<br>COVERED.</h1>
+          <p class="sub">
+            Need support with your project? Vision For Xperiences is here to help.
+            Leave us your contact info and what you need assistance with &mdash;
+            we'll get back to you within 48 hours.
+          </p>
+        </div>
+      </div>
+      <a class="down" href="#form" aria-label="Scroll to form">
+        The form
+        <span class="chev"></span>
+      </a>
+    </section>
+
+    <section id="form" class="form-section">
+      <div class="form-intro">
+        <h2>How can we help?</h2>
+        <p>Fill in the form below and one of our team members will reach out as soon as possible.</p>
+      </div>
+
+      <form
+        class="inquiry-form"
+        id="supportForm"
+        action="https://formspree.io/f/xvzqeydj"
+        method="POST"
+      >
+        <input type="hidden" name="_next" value="https://vfx.support?sent=1" />
+
+        <div>
+          <label for="name">Name <span style="color:rgba(240,240,250,.35);">*</span></label>
+          <input id="name" name="name" type="text" placeholder="Your name" required autocomplete="name" />
+        </div>
+
+        <div>
+          <label for="email">Email <span style="color:rgba(240,240,250,.35);">*</span></label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+
+        <div>
+          <label for="company">Company / Brand</label>
+          <input id="company" name="company" type="text" placeholder="Optional" autocomplete="organization" />
+        </div>
+
+        <div>
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" placeholder="Optional" autocomplete="tel" />
+        </div>
+
+        <div class="field-full">
+          <label for="issueType">Type of support <span style="color:rgba(240,240,250,.35);">*</span></label>
+          <select id="issueType" name="issueType" required>
+            <option value="" disabled selected>Select a category</option>
+            <option value="Project Help">Project Help &mdash; guidance on an ongoing project</option>
+            <option value="Technical Issue">Technical Issue &mdash; software, tools, or assets</option>
+            <option value="Delivery / Files">Delivery / Files &mdash; receiving or accessing deliverables</option>
+            <option value="Revision Request">Revision Request &mdash; changes to completed work</option>
+            <option value="Account / Billing">Account / Billing &mdash; invoices or payments</option>
+            <option value="Other">Other / Not sure</option>
+          </select>
+        </div>
+
+        <div class="field-full">
+          <label for="description">Describe your issue <span style="color:rgba(240,240,250,.35);">*</span></label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Tell us what's going on. The more detail you give, the faster we can help."
+            required
+          ></textarea>
+        </div>
+
+        <div>
+          <label for="reference">Order / project reference</label>
+          <input id="reference" name="reference" type="text" placeholder="Invoice number, project name, etc." />
+        </div>
+
+        <div>
+          <label for="urgency">Urgency</label>
+          <select id="urgency" name="urgency">
+            <option value="" disabled selected>How urgent is this?</option>
+            <option value="Not urgent">Not urgent &mdash; whenever you can</option>
+            <option value="This week">This week</option>
+            <option value="Today">Today &mdash; it's blocking my work</option>
+          </select>
+        </div>
+
+        <div class="form-submit">
+          <button class="btn-submit" type="submit">Send request &rarr;</button>
+          <p class="form-note">We'll reply within 48 hours. No spam, ever.</p>
+        </div>
+
+        <div class="form-success" id="formSuccess">
+          &#10003;&nbsp; Thanks &mdash; your request landed. We'll be in touch within 48 hours.
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <img src="https://vfx.productions/assets/logo.png" alt="Vision For Xperiences" style="height:22px;object-fit:contain;opacity:.7;" />
+      </div>
+      <p class="footer-copy">&copy; 2026 Vision For Xperiences &mdash; All rights reserved.</p>
+    </div>
+  </footer>
 
   <script>
-    // Optional: You can add some simple animation to the 3D card on hover
-    document.querySelector('.contact-card').addEventListener('mousemove', (e) => {
-      const card = e.currentTarget;
-      const { width, height, left, top } = card.getBoundingClientRect();
-      const mouseX = e.clientX - left;
-      const mouseY = e.clientY - top;
+  (function(){
+    const drawer   = document.getElementById("drawer");
+    const backdrop = document.getElementById("drawerBackdrop");
+    const ham      = document.getElementById("hamburger");
+    const close    = document.getElementById("drawerClose");
+    function open(){ drawer.classList.add("open"); backdrop.classList.add("open"); drawer.setAttribute("aria-hidden","false"); backdrop.setAttribute("aria-hidden","false"); }
+    function shut(){ drawer.classList.remove("open"); backdrop.classList.remove("open"); drawer.setAttribute("aria-hidden","true"); backdrop.setAttribute("aria-hidden","true"); }
+    ham.addEventListener("click", open);
+    close.addEventListener("click", shut);
+    backdrop.addEventListener("click", shut);
+    drawer.querySelectorAll("[data-nav]").forEach(a => a.addEventListener("click", shut));
+    window.addEventListener("keydown", e => { if(e.key==="Escape") shut(); });
 
-      const rotateX = ((mouseY / height) - 0.5) * 20;
-      const rotateY = ((mouseX / width) - 0.5) * -20;
-
-      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener("click", e => {
+        const href = a.getAttribute("href");
+        if (!href || href==="#") return;
+        const t = document.querySelector(href);
+        if(t){ e.preventDefault(); history.pushState(null,"",href); t.scrollIntoView({behavior:"smooth",block:"start"}); }
+      });
     });
 
-    document.querySelector('.contact-card').addEventListener('mouseleave', () => {
-      document.querySelector('.contact-card').style.transform = 'rotateX(0deg) rotateY(0deg)';
-    });
+    if(new URLSearchParams(window.location.search).get("sent")==="1"){
+      const msg = document.getElementById("formSuccess");
+      if(msg){ msg.style.display = "block"; }
+    }
+  })();
   </script>
 </body>
 </html>
